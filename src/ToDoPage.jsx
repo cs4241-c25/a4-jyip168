@@ -1,10 +1,9 @@
 import React from 'react'
-import './App.css'
 
 function ToDoPage() {
 
     return (
-        <div>
+        <div className="d-flex flex-column align-items-center gap-5">
             <a href="/logout" className="btn btn-warning btn-lg logout-button z-3 position-fixed"
                role="button">Logout</a>
             <h1 className="h1 text-decoration-underline">Art Commission To-Do List</h1>

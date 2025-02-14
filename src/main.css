@@ -1,0 +1,29 @@
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&display=swap');
+
+* {
+    font-family: "Quicksand", serif;
+}
+
+body {
+    background:#362d68;
+    color:white;
+}
+
+main {
+    width: 100%;
+    margin: 40px 5%;
+}
+
+.logout-button {
+    top: 20px;
+    right: 20px;
+}
+
+#results-scroll {
+    max-height: 600px;
+}
+
+h1, h2 {
+    font-family: "Josefin Sans", serif;
+}
