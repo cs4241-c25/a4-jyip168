@@ -80,8 +80,6 @@ window.onload = function() {
 
     const edit = document.querySelector("#editForm");
     edit.addEventListener('submit', update);
-
-    alert("Hello! I am an alert box!!");
 }
 
 async function handleDelete(id) {
