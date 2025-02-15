@@ -86,8 +86,8 @@ async function run() {
     collection = await dbconnect.db("cs4241").collection("comms");
 
     app.get("/getCommissions", async (req, res) => {
-        //const appdata = await collection.find({userId: request.user.id}).toArray();
-        const appdata = await collection.find().toArray();
+        const appdata = await collection.find({userId: req.user.id}).toArray();
+        //const appdata = await collection.find().toArray();
         res.end(JSON.stringify(appdata))
     })
 
@@ -104,7 +104,7 @@ async function run() {
             newData.deadline = calcDeadline(tempDate, newData.commtype, newData.styletype);
             //console.log("After: ", newData);
             newData.progress = "Not Started";
-            //newData.userId = req.user.id;
+            newData.userId = req.user.id;
 
             results = await collection.insertOne(newData);
             console.log("results: ", results);
