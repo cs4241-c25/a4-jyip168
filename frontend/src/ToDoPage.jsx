@@ -10,12 +10,16 @@ function ToDoPage() {
             .then(res => {
                 const data = res.data;
                 setCommissions(data);
-                console.log("res: ", res);
-                console.log("commissions: ", commissions);
             })
             .catch(err => console.log(err));
 
     }, []);
+
+    useEffect(() => {
+        console.log("commissions: ", commissions);
+
+    }, [commissions]);
+
 
     return (
         <div className="d-flex flex-column align-items-center gap-5">
@@ -89,6 +93,28 @@ function ToDoPage() {
                         </tr>
                         </thead>
                         <tbody className="table-group-divider">
+                        {commissions.map(item => (
+                            <tr>
+                                <td className="d-none">{item._id}</td>
+                                <td className="text-center text-break">{item.clientname}</td>
+                                <td className="text-center text-break text-nowrap">{item.commtype}</td>
+                                <td className="text-center text-break text-nowrap">{item.styletype}</td>
+                                <td className="text-center text-break text-nowrap">{item.dateissued}</td>
+                                <td className="text-center text-break">{item.commdesc}</td>
+                                <td className="text-center text-break text-nowrap">{item.progress}</td>
+                                <td className="text-center text-break text-nowrap">{item.deadline}</td>
+                                <td>
+                                    <div className="row">
+                                        <button className="btn btn-primary text-nowrap col m-2" onClick="handleEdit('${item._id}', '${item.clientname}', '${item.commtype}',
+                                                '${item.styletype}', '${item.dateissued}', '${item.commdesc}', '${item.progress}')">Edit
+                                        </button>
+                                        <button className="btn btn-danger text-nowrap col m-2"
+                                                onClick="handleDelete('${item._id}')">Delete
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        ))}
                         </tbody>
                     </table>
                 </div>

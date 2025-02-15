@@ -66,7 +66,6 @@ async function run() {
     app.get("/getCommissions", async (req, res) => {
         //const appdata = await collection.find({userId: request.user.id}).toArray();
         const appdata = await collection.find().toArray();
-        console.log("happi", appdata)
         res.end(JSON.stringify(appdata))
     })
 
