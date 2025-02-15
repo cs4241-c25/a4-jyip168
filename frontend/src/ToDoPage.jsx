@@ -13,6 +13,16 @@ function ToDoPage() {
         commdesc: "",
     }]);
 
+    const [update, setUpdate] = useState([{
+        _id: "",
+        clientname: "",
+        commtype: "",
+        styletype: "",
+        dateissued: "",
+        commdesc: "",
+        progress: "",
+    }]);
+
     useEffect(() => {
         axios.get("http://localhost:5173/getCommissions")
             .then(res => {
@@ -25,7 +35,6 @@ function ToDoPage() {
 
     useEffect(() => {
         console.log("commissions: ", commissions);
-
     }, [commissions]);
 
     function handleSubmit(event) {
@@ -45,6 +54,65 @@ function ToDoPage() {
                 setReload(reload + 1);
             })
             .catch(err => console.log(err));
+    }
+
+    function handleDelete(id) {
+
+    }
+
+    function handleUpdate(event) {
+        event.preventDefault()
+
+        axios.post("http://localhost:5173/update", (update))
+            .then(res => {
+                console.log("update: ", update);
+
+                const editSection = document.querySelector("#editForm");
+                editSection.reset();
+
+                editSection.classList.add("d-none");
+                setReload(reload + 1);
+            })
+            .catch(err => console.log(err));
+    }
+
+    function loadEdit(id, clientname, commtype, styletype, dateissued, commdesc, progress) {
+        const clientnameField = document.querySelector("#edit-clientname");
+        clientnameField.value = clientname;
+        const commtypeField = document.querySelector("#edit-commtype");
+        commtypeField.value = commtype;
+        const styletypeField = document.querySelector("#edit-styletype");
+        styletypeField.value = styletype;
+        const dateissuedField = document.querySelector("#edit-dateissued");
+        let tempdate = new Date(dateissued);
+
+        let year = tempdate.getUTCFullYear();
+        let month = tempdate.getUTCMonth() + 1;
+        let day = tempdate.getUTCDate();
+        const convertedDate = year.toString().padStart(4, "0") + "-" + month.toString().padStart(2, "0") + "-" + day.toString().padStart(2, "0");
+        dateissuedField.value = convertedDate;
+
+        const commdescField = document.querySelector("#edit-commdesc");
+        commdescField.value = commdesc;
+        const progressField = document.querySelector("#edit-progress");
+        progressField.value = progress;
+        const editidField = document.querySelector("#editid");
+        editidField.value = id;
+
+        setUpdate({
+            _id: id,
+            clientname: clientname,
+            commtype: commtype,
+            styletype: styletype,
+            dateissued: convertedDate,
+            commdesc: commdesc,
+            progress: progress,
+        })
+
+
+        const editSection = document.querySelector("#editForm");
+        editSection.classList.remove("d-none");
+
     }
 
 
@@ -135,11 +203,10 @@ function ToDoPage() {
                                 <td className="text-center text-break text-nowrap">{item.deadline}</td>
                                 <td>
                                     <div className="row">
-                                        <button className="btn btn-primary text-nowrap col m-2" onClick="handleEdit('${item._id}', '${item.clientname}', '${item.commtype}',
-                                                '${item.styletype}', '${item.dateissued}', '${item.commdesc}', '${item.progress}')">Edit
+                                        <button className="btn btn-primary text-nowrap col m-2" onClick={() => loadEdit(item._id, item.clientname, item.commtype, item.styletype, item.dateissued, item.commdesc, item.progress)}>Edit
                                         </button>
                                         <button className="btn btn-danger text-nowrap col m-2"
-                                                onClick="handleDelete('${item._id}')">Delete
+                                                onClick={() => handleDelete(item.id)}>Delete
                                         </button>
                                     </div>
                                 </td>
@@ -154,15 +221,16 @@ function ToDoPage() {
                     <h2 className="h2">Update Commission</h2>
                     <hr className="border border-primary border-2 opacity-75"/>
                 </div>
-                <form id="editForm" className="row g-3 d-none">
+                <form id="editForm" className="row g-3 d-none" onSubmit={handleUpdate}>
                     <div className="mb-1 col-12">
                         <label htmlFor="edit-clientname" className="form-label fs-5">Commissioner Name: </label>
-                        <input type="text" id="edit-clientname" className="form-control form-control-sm" required/>
+                        <input type="text" id="edit-clientname" className="form-control form-control-sm"
+                               onChange={e => setUpdate(prevState => ({...prevState, clientname: e.target.value}))} required/>
                     </div>
                     <div className="mb-1 col-md-4">
                         <label htmlFor="edit-commtype" className="form-label fs-5">Commission Type: </label>
                         <select name="edit-commtype" id="edit-commtype" className="form-select form-select-sm"
-                                required>
+                                onChange={e => setUpdate(prevState => ({...prevState, commtype: e.target.value}))} required>
                             <option value="">--Please choose an option--</option>
                             <option value="Icon">Icon</option>
                             <option value="Half Body">Half Body</option>
@@ -173,7 +241,7 @@ function ToDoPage() {
                     <div className="mb-1 col-md-4">
                         <label htmlFor="edit-styletype" className="form-label fs-5">Style Type: </label>
                         <select name="edit-styletype" id="edit-styletype" className="form-select form-select-sm"
-                                required>
+                                onChange={e => setUpdate(prevState => ({...prevState, styletype: e.target.value}))} required>
                             <option value="">--Please choose an option--</option>
                             <option value="Sketch">Sketch</option>
                             <option value="Flat">Flat Color</option>
@@ -183,17 +251,17 @@ function ToDoPage() {
                     <div className="mb-1 col-md-4">
                         <label htmlFor="edit-dateissued" className="form-label fs-5">Date Issued: </label>
                         <input type="date" id="edit-dateissued" name="edit-dateissued"
-                               className="form-control form-control-sm" required/>
+                               onChange={e => setUpdate(prevState => ({...prevState, dateissued: e.target.value}))} className="form-control form-control-sm" required/>
                     </div>
                     <div className="mb-1 col-12">
                         <label htmlFor="edit-commdesc" className="form-label fs-5">Commission Description: </label>
                         <textarea id="edit-commdesc" name="edit-commdesc" className="form-control"
-                                  required></textarea>
+                                  onChange={e => setUpdate(prevState => ({...prevState, commdesc: e.target.value}))} required></textarea>
                     </div>
                     <div className="mb-1 col-12">
                         <label htmlFor="edit-progress" className="form-label fs-5">Progress: </label>
                         <select name="edit-progress" id="edit-progress" className="form-select form-select-sm"
-                                required>
+                                onChange={e => setUpdate(prevState => ({...prevState, progress: e.target.value}))} required>
                             <option value="">--Please choose an option--</option>
                             <option value="Not Started">Not Started</option>
                             <option value="Linework">Linework</option>
@@ -203,7 +271,7 @@ function ToDoPage() {
                             <option value="Completed">Completed</option>
                         </select>
                     </div>
-                    <input type="hidden" id="editid" name="editid" value=""/>
+                    <input type="hidden" id="editid" name="editid" value="" onChange={e => setUpdate(prevState => ({...prevState, _id: e.target.value}))}/>
                     <div className="align-buttons col-12">
                         <input type="submit" className="btn btn-primary me-2"/>
                     </div>
@@ -214,3 +282,5 @@ function ToDoPage() {
 }
 
 export default ToDoPage
+
+
