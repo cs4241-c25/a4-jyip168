@@ -129,9 +129,10 @@ async function run() {
         })
     });
 
-    app.delete("/delete", (req, res) => {
+    app.delete("/delete", async (req, res) => {
 
         let results;
+
 
         req.on( "data", async function (data) {
             const id = new ObjectId(JSON.parse(data));
@@ -141,8 +142,8 @@ async function run() {
         })
 
 
-        req.on( "end", function() {
-            res.writeHead( 200, "OK", {"Content-Type": "application/json" })
+        req.on("end", function () {
+            res.writeHead(200, "OK", {"Content-Type": "application/json"})
             res.end(JSON.stringify(results))
         })
     });

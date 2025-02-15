@@ -42,8 +42,6 @@ function ToDoPage() {
 
         axios.post("http://localhost:5173/submit", (submission))
             .then(res => {
-                console.log(res);
-
                 const form = document.querySelector("#comm-form");
                 form.reset();
 
@@ -57,7 +55,16 @@ function ToDoPage() {
     }
 
     function handleDelete(id) {
+        axios.delete("http://localhost:5173/delete",
+            {data: {id}})
+            .then(res => {
+                const editSection = document.querySelector("#editForm");
+                editSection.reset();
+                editSection.classList.add("d-none");
 
+                setReload(reload + 1);
+        })
+            .catch(err => console.log(err));
     }
 
     function handleUpdate(event) {
@@ -65,8 +72,6 @@ function ToDoPage() {
 
         axios.post("http://localhost:5173/update", (update))
             .then(res => {
-                console.log("update: ", update);
-
                 const editSection = document.querySelector("#editForm");
                 editSection.reset();
 
@@ -206,7 +211,7 @@ function ToDoPage() {
                                         <button className="btn btn-primary text-nowrap col m-2" onClick={() => loadEdit(item._id, item.clientname, item.commtype, item.styletype, item.dateissued, item.commdesc, item.progress)}>Edit
                                         </button>
                                         <button className="btn btn-danger text-nowrap col m-2"
-                                                onClick={() => handleDelete(item.id)}>Delete
+                                                onClick={() => handleDelete(item._id)}>Delete
                                         </button>
                                     </div>
                                 </td>
