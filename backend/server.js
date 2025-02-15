@@ -82,7 +82,7 @@ async function run() {
             newData.deadline = calcDeadline(tempDate, newData.commtype, newData.styletype);
             //console.log("After: ", newData);
             newData.progress = "Not Started";
-            newData.userId = req.user.id;
+            //newData.userId = req.user.id;
 
             results = await collection.insertOne(newData);
             console.log("results: ", results);

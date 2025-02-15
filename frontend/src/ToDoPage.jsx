@@ -3,7 +3,15 @@ import axios from "axios"
 
 function ToDoPage() {
 
+    const [reload, setReload] = useState(0);
     const [commissions, setCommissions] = useState([]);
+    const [submission, setSubmission] = useState([{
+        clientname: "",
+        commtype: "",
+        styletype: "",
+        dateissued: "",
+        commdesc: "",
+    }]);
 
     useEffect(() => {
         axios.get("http://localhost:5173/getCommissions")
@@ -13,12 +21,31 @@ function ToDoPage() {
             })
             .catch(err => console.log(err));
 
-    }, []);
+    }, [reload]);
 
     useEffect(() => {
         console.log("commissions: ", commissions);
 
     }, [commissions]);
+
+    function handleSubmit(event) {
+        event.preventDefault()
+
+        axios.post("http://localhost:5173/submit", (submission))
+            .then(res => {
+                console.log(res);
+
+                const form = document.querySelector("#comm-form");
+                form.reset();
+
+                const editSection = document.querySelector("#editForm");
+                editSection.reset();
+                editSection.classList.add("d-none");
+
+                setReload(reload + 1);
+            })
+            .catch(err => console.log(err));
+    }
 
 
     return (
@@ -31,14 +58,16 @@ function ToDoPage() {
                     <h2 className="h2">Add New Commission</h2>
                     <hr className="border border-primary border-2 opacity-75"/>
                 </div>
-                <form id="comm-form" className="row g-3">
+                <form id="comm-form" className="row g-3" onSubmit={handleSubmit}>
                     <div className="mb-1 col-12">
                         <label htmlFor="clientname" className="form-label fs-5">Commissioner Name: </label>
-                        <input type="text" id="clientname" className="form-control form-control-sm" required/>
+                        <input type="text" id="clientname" className="form-control form-control-sm"
+                               onChange={e => setSubmission(prevState => ({...prevState, clientname: e.target.value}))} required/>
                     </div>
                     <div className="mb-1 col-md-4">
                         <label htmlFor="commtype" className="form-label fs-5">Commission Type: </label>
-                        <select name="commtype" id="commtype" className="form-select form-select-sm" required>
+                        <select name="commtype" id="commtype" className="form-select form-select-sm"
+                                onChange={e => setSubmission(prevState => ({...prevState, commtype: e.target.value}))} required>
                             <option value="">--Please choose an option--</option>
                             <option value="Icon">Icon</option>
                             <option value="Half Body">Half Body</option>
@@ -48,7 +77,8 @@ function ToDoPage() {
                     </div>
                     <div className="mb-1 col-md-4">
                         <label htmlFor="styletype" className="form-label fs-5">Style Type: </label>
-                        <select name="styletype" id="styletype" className="form-select form-select-sm" required>
+                        <select name="styletype" id="styletype" className="form-select form-select-sm"
+                                onChange={e => setSubmission(prevState => ({...prevState, styletype: e.target.value}))} required>
                             <option value="">--Please choose an option--</option>
                             <option value="Sketch">Sketch</option>
                             <option value="Flat">Flat Color</option>
@@ -57,13 +87,13 @@ function ToDoPage() {
                     </div>
                     <div className="mb-1 col-md-4">
                         <label htmlFor="dateissued" className="form-label fs-5">Date Issued: </label>
-                        <input type="date" id="dateissued" name="dateissued"
-                               className="form-control form-control-sm" required/>
+                        <input type="date" id="dateissued" name="dateissued" className="form-control form-control-sm"
+                               onChange={e => setSubmission(prevState => ({...prevState, dateissued: e.target.value}))} required/>
                     </div>
                     <div className="mb-1 col-12">
                         <label htmlFor="commdesc" className="form-label fs-5">Commission Description: </label>
                         <textarea id="commdesc" name="commdesc" className="form-control"
-                                  required></textarea>
+                               onChange={e => setSubmission(prevState => ({...prevState, commdesc: e.target.value}))} required></textarea>
                     </div>
                     <div className="col-12">
                         <input type="submit" className="btn btn-primary me-2"/>
@@ -94,7 +124,7 @@ function ToDoPage() {
                         </thead>
                         <tbody className="table-group-divider">
                         {commissions.map(item => (
-                            <tr>
+                            <tr key={item._id}>
                                 <td className="d-none">{item._id}</td>
                                 <td className="text-center text-break">{item.clientname}</td>
                                 <td className="text-center text-break text-nowrap">{item.commtype}</td>
