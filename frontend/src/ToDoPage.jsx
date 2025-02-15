@@ -24,7 +24,7 @@ function ToDoPage() {
     }]);
 
     useEffect(() => {
-        axios.get("http://localhost:5173/getCommissions")
+        axios.get("backend/getCommissions")
             .then(res => {
                 const data = res.data;
                 setCommissions(data);
@@ -40,7 +40,7 @@ function ToDoPage() {
     function handleSubmit(event) {
         event.preventDefault()
 
-        axios.post("http://localhost:5173/submit", (submission))
+        axios.post("backend/submit", (submission))
             .then(res => {
                 const form = document.querySelector("#comm-form");
                 form.reset();
@@ -55,7 +55,7 @@ function ToDoPage() {
     }
 
     function handleDelete(id) {
-        axios.delete("http://localhost:5173/delete",
+        axios.delete("backend/delete",
             {data: {id}})
             .then(res => {
                 const editSection = document.querySelector("#editForm");
@@ -70,7 +70,7 @@ function ToDoPage() {
     function handleUpdate(event) {
         event.preventDefault()
 
-        axios.post("http://localhost:5173/update", (update))
+        axios.post("backend/update", (update))
             .then(res => {
                 const editSection = document.querySelector("#editForm");
                 editSection.reset();
@@ -123,7 +123,7 @@ function ToDoPage() {
 
     return (
         <div className="d-flex flex-column align-items-center gap-5">
-            <a href="/logout" className="btn btn-warning btn-lg logout-button z-3 position-fixed"
+            <a href="backend/logout" className="btn btn-warning btn-lg logout-button z-3 position-fixed"
                role="button">Logout</a>
             <h1 className="h1 text-decoration-underline">Art Commission To-Do List</h1>
             <section className="container-lg">
@@ -135,12 +135,14 @@ function ToDoPage() {
                     <div className="mb-1 col-12">
                         <label htmlFor="clientname" className="form-label fs-5">Commissioner Name: </label>
                         <input type="text" id="clientname" className="form-control form-control-sm"
-                               onChange={e => setSubmission(prevState => ({...prevState, clientname: e.target.value}))} required/>
+                               onChange={e => setSubmission(prevState => ({...prevState, clientname: e.target.value}))}
+                               required/>
                     </div>
                     <div className="mb-1 col-md-4">
                         <label htmlFor="commtype" className="form-label fs-5">Commission Type: </label>
                         <select name="commtype" id="commtype" className="form-select form-select-sm"
-                                onChange={e => setSubmission(prevState => ({...prevState, commtype: e.target.value}))} required>
+                                onChange={e => setSubmission(prevState => ({...prevState, commtype: e.target.value}))}
+                                required>
                             <option value="">--Please choose an option--</option>
                             <option value="Icon">Icon</option>
                             <option value="Half Body">Half Body</option>
@@ -151,7 +153,8 @@ function ToDoPage() {
                     <div className="mb-1 col-md-4">
                         <label htmlFor="styletype" className="form-label fs-5">Style Type: </label>
                         <select name="styletype" id="styletype" className="form-select form-select-sm"
-                                onChange={e => setSubmission(prevState => ({...prevState, styletype: e.target.value}))} required>
+                                onChange={e => setSubmission(prevState => ({...prevState, styletype: e.target.value}))}
+                                required>
                             <option value="">--Please choose an option--</option>
                             <option value="Sketch">Sketch</option>
                             <option value="Flat">Flat Color</option>
@@ -161,12 +164,14 @@ function ToDoPage() {
                     <div className="mb-1 col-md-4">
                         <label htmlFor="dateissued" className="form-label fs-5">Date Issued: </label>
                         <input type="date" id="dateissued" name="dateissued" className="form-control form-control-sm"
-                               onChange={e => setSubmission(prevState => ({...prevState, dateissued: e.target.value}))} required/>
+                               onChange={e => setSubmission(prevState => ({...prevState, dateissued: e.target.value}))}
+                               required/>
                     </div>
                     <div className="mb-1 col-12">
                         <label htmlFor="commdesc" className="form-label fs-5">Commission Description: </label>
                         <textarea id="commdesc" name="commdesc" className="form-control"
-                               onChange={e => setSubmission(prevState => ({...prevState, commdesc: e.target.value}))} required></textarea>
+                                  onChange={e => setSubmission(prevState => ({...prevState, commdesc: e.target.value}))}
+                                  required></textarea>
                     </div>
                     <div className="col-12">
                         <input type="submit" className="btn btn-primary me-2"/>
@@ -208,7 +213,8 @@ function ToDoPage() {
                                 <td className="text-center text-break text-nowrap">{item.deadline}</td>
                                 <td>
                                     <div className="row">
-                                        <button className="btn btn-primary text-nowrap col m-2" onClick={() => loadEdit(item._id, item.clientname, item.commtype, item.styletype, item.dateissued, item.commdesc, item.progress)}>Edit
+                                        <button className="btn btn-primary text-nowrap col m-2"
+                                                onClick={() => loadEdit(item._id, item.clientname, item.commtype, item.styletype, item.dateissued, item.commdesc, item.progress)}>Edit
                                         </button>
                                         <button className="btn btn-danger text-nowrap col m-2"
                                                 onClick={() => handleDelete(item._id)}>Delete
@@ -230,12 +236,14 @@ function ToDoPage() {
                     <div className="mb-1 col-12">
                         <label htmlFor="edit-clientname" className="form-label fs-5">Commissioner Name: </label>
                         <input type="text" id="edit-clientname" className="form-control form-control-sm"
-                               onChange={e => setUpdate(prevState => ({...prevState, clientname: e.target.value}))} required/>
+                               onChange={e => setUpdate(prevState => ({...prevState, clientname: e.target.value}))}
+                               required/>
                     </div>
                     <div className="mb-1 col-md-4">
                         <label htmlFor="edit-commtype" className="form-label fs-5">Commission Type: </label>
                         <select name="edit-commtype" id="edit-commtype" className="form-select form-select-sm"
-                                onChange={e => setUpdate(prevState => ({...prevState, commtype: e.target.value}))} required>
+                                onChange={e => setUpdate(prevState => ({...prevState, commtype: e.target.value}))}
+                                required>
                             <option value="">--Please choose an option--</option>
                             <option value="Icon">Icon</option>
                             <option value="Half Body">Half Body</option>
@@ -246,7 +254,8 @@ function ToDoPage() {
                     <div className="mb-1 col-md-4">
                         <label htmlFor="edit-styletype" className="form-label fs-5">Style Type: </label>
                         <select name="edit-styletype" id="edit-styletype" className="form-select form-select-sm"
-                                onChange={e => setUpdate(prevState => ({...prevState, styletype: e.target.value}))} required>
+                                onChange={e => setUpdate(prevState => ({...prevState, styletype: e.target.value}))}
+                                required>
                             <option value="">--Please choose an option--</option>
                             <option value="Sketch">Sketch</option>
                             <option value="Flat">Flat Color</option>
@@ -256,17 +265,20 @@ function ToDoPage() {
                     <div className="mb-1 col-md-4">
                         <label htmlFor="edit-dateissued" className="form-label fs-5">Date Issued: </label>
                         <input type="date" id="edit-dateissued" name="edit-dateissued"
-                               onChange={e => setUpdate(prevState => ({...prevState, dateissued: e.target.value}))} className="form-control form-control-sm" required/>
+                               onChange={e => setUpdate(prevState => ({...prevState, dateissued: e.target.value}))}
+                               className="form-control form-control-sm" required/>
                     </div>
                     <div className="mb-1 col-12">
                         <label htmlFor="edit-commdesc" className="form-label fs-5">Commission Description: </label>
                         <textarea id="edit-commdesc" name="edit-commdesc" className="form-control"
-                                  onChange={e => setUpdate(prevState => ({...prevState, commdesc: e.target.value}))} required></textarea>
+                                  onChange={e => setUpdate(prevState => ({...prevState, commdesc: e.target.value}))}
+                                  required></textarea>
                     </div>
                     <div className="mb-1 col-12">
                         <label htmlFor="edit-progress" className="form-label fs-5">Progress: </label>
                         <select name="edit-progress" id="edit-progress" className="form-select form-select-sm"
-                                onChange={e => setUpdate(prevState => ({...prevState, progress: e.target.value}))} required>
+                                onChange={e => setUpdate(prevState => ({...prevState, progress: e.target.value}))}
+                                required>
                             <option value="">--Please choose an option--</option>
                             <option value="Not Started">Not Started</option>
                             <option value="Linework">Linework</option>
@@ -276,7 +288,8 @@ function ToDoPage() {
                             <option value="Completed">Completed</option>
                         </select>
                     </div>
-                    <input type="hidden" id="editid" name="editid" value="" onChange={e => setUpdate(prevState => ({...prevState, _id: e.target.value}))}/>
+                    <input type="hidden" id="editid" name="editid" value=""
+                           onChange={e => setUpdate(prevState => ({...prevState, _id: e.target.value}))}/>
                     <div className="align-buttons col-12">
                         <input type="submit" className="btn btn-primary me-2"/>
                     </div>

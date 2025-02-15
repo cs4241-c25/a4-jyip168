@@ -1,5 +1,4 @@
 import express from "express";
-import path from "path";
 const app = express();
 import dotenv from "dotenv";
 const port = 5173;
@@ -43,21 +42,44 @@ passport.use(new GitHubStrategy({
 ));
 
 passport.serializeUser(function(user, done) {
+    console.log("Serialize: ", user)
     done(null, user);
 })
 
 passport.deserializeUser(function(obj, done) {
+    console.log("Deserialize: ", obj)
     done(null, obj);
 })
 
+app.get("/auth/github",
+    passport.authenticate("github", {scope: ["user: email"] })
+);
 
-app.get("/", (req, res) => {
+app.get("/auth/github/callback",
+    passport.authenticate("github", {failureRedirect: "/"}),
+    function(req, res) {
+        res.redirect("/queue");
+    });
 
+app.get("/logout", (req, res, next) => {
+    req.logOut((err) => {
+        if(err) {
+            return next(err);
+        }
+    });
+    res.redirect("/");
 });
 
-app.get("/queue", (req, res) => {
 
-});
+app.get("/user", (req, res) => {
+    if(req.isAuthenticated()) {
+        res.json(req.user);
+    }
+    else {
+        res.status(401).json({ message: "Not authenticated"});
+    }
+})
+
 
 async function run() {
     await dbconnect.connect().then(() => console.log("Connected!"));

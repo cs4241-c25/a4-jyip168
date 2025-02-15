@@ -5,6 +5,18 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   server: {
     port: 3000,
+    proxy: {
+      "/backend": {
+        target: "http://localhost:5173",
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/backend/, ""),
+      },
+      "/auth/github/callback": {
+        target: "http://localhost:5173",
+        changeOrigin: true,
+        rewrite: (path) => path,
+      }
+    }
   },
   plugins: [react()],
 })
